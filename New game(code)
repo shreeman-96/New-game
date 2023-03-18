@@ -1,0 +1,68 @@
+from ursina import *
+import random
+
+app = Ursina()
+window.fullscreen = True
+for i in range(6):
+    for j in range(21):
+        entity = Entity(model = 'cube', color = color.green, texture = 'grass', position = (i, 0, j))
+cube = Entity(model = 'cube', texture = 'brick', color = color.black, collider = 'box')
+cube.y = 1
+camera.position = (cube.x, 2, cube.z - 20)
+object = Entity(model = 'cube', scale = (1, 2, 1), texture = 'white_cube', collider = 'box', color = color.blue)
+collider_entity = Entity(parent = object, scale = (0.5, 0.5, 0), collider = 'box')
+object2 = Entity(model = 'cube', texture = 'white_cube', scale = (1, 2, 1), color = color.blue)
+collider_entity_2 = Entity(parent = object2, scale = (0.5, 1, 0), collider = 'box')
+object3 = Entity(model = 'cube', texture = 'white_cube', scale = (1, 2, 1), color = color.blue)
+collider_entity_3 = Entity(parent = object3, scale = (0.5, 1, 0), color = color.black, collider = 'box')
+object4 = Entity(model = 'cube', texture = 'white_cube', scale = (1, 2, 1), color = color.blue)
+collider_entity_4 = Entity(parent = object4, scale = (0.5, 1, 0), color = color.black, collider = 'box')
+
+def random_position():
+    ran_x = random.randint(0, 5)
+    object.position = (ran_x, 1, 20)
+    ran_x2 = random.randint(0, 5)
+    object2.position = (ran_x2, 1, 20)
+    ran_x3 = random.randint(0, 5)
+    object3.position = (ran_x3, 1, 20)
+    ran_x4 = random.randint(0, 5)
+    object4.position = (ran_x4, 1, 20)
+random_position()
+def update():
+    hit_info = cube.intersects()
+    if hit_info.hit:
+        cube.z -= 0.4
+        camera.z -= 0.4
+    if cube.z<0:
+        print('You lost!')
+        quit()
+    if cube.x<0:
+        cube.x += 1
+        camera.x += 1
+    if cube.x>5:
+        cube.x -= 1
+        camera.x -= 1
+    object.z -= 0.1
+    object2.z -= 0.1
+    object3.z -= 0.1
+    object4.z -= 0.1
+    if object.z<0 and object2.z<0 and object3.z<0 and object4.z<0:
+        random_position()
+def input(keys):
+    if keys=='d':
+        cube.x += 1
+        camera.x += 1
+    if keys=='a':
+        cube.x -= 1
+        camera.x -= 1
+    if keys=='w':
+        cube.z += 1
+        camera.z += 1
+    if keys=='s':
+        cube.z -= 1
+        camera.z -= 1
+    if keys=='1':
+        camera.rotation = Vec3(90, 0, 0)
+        camera.z, camera.y = cube.z, 50
+
+app.run()
